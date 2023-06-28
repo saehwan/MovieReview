@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from "react-router-dom"
-
+import './MovieCard.css'
 const MovieCard = ({movie, selectMovie}) => {
     const IMAGE_PATH = "https://image.tmdb.org/t/p/w342"
 
     return (
         <Link to={`/movie/${movie.id}`} style={{textDecoration:"none", color:"white"}}>
             <div onClick={() => selectMovie(movie)} className={"movie"}>
-                <div className="movie-title">
+                <div className="cards">
                 <img className="cards__img" src={`https://image.tmdb.org/t/p/original${movie?movie.poster_path:""}`} />
                 <div className="cards__overlay">
                     <div className="card__title">{movie?movie.original_title:""}</div>
