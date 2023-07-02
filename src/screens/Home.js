@@ -4,6 +4,7 @@ import axios from 'axios'
 import MovieCard from "../components/MovieCard/MovieCard"
 import Youtube from 'react-youtube'
 import { Carousel } from 'react-responsive-carousel';
+import { Link } from "react-router-dom"
 
 
 function Home() {
@@ -35,7 +36,7 @@ function Home() {
             }
         })
 
-        console.log(data.results[0])
+        console.log(data.results)
         setMovies(data.results)
         setMovie(data.results[0])
 
@@ -56,12 +57,13 @@ function Home() {
             const trailer = data.videos.results.find(vid => vid.name === "Official Trailer")
             setTrailer(trailer ? trailer : data.videos.results[0])
         }
-
+        console.log(data)
         setMovie(data)
     }
 
 
     const selectMovie = (movie) => {
+
         fetchMovie(movie.id)
         setPlaying(false)
         setMovie(movie)
@@ -81,7 +83,7 @@ function Home() {
     return (
         <div className="Home">
             <header className="center-max-size header">
-                <span className={"brand"}>Moovie The Doovie</span>
+                <Link to="/"><span className={"brand"}>Moovie The Doobie</span></Link>
                 <form className="form" onSubmit={fetchMovies}>
                     <input className="search" type="text" id="search"
                            onInput={(event) => setSearchKey(event.target.value)}/>
@@ -95,7 +97,7 @@ function Home() {
                              style={{backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)), url(${BACKDROP_PATH}${movie.backdrop_path})`}}>
                              
                             {playing ?
-                                <>
+                                <>  
                                     <Youtube
                                         videoId={trailer.key}
                                         className={"youtube amru"}

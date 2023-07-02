@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './screens/Home'
 import MovieDetail from './components/MovieDetail/MovieDetail'
 function App() {
-
+    
     return (
         
         <div className="App">

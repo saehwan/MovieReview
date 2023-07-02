@@ -5,7 +5,8 @@ const MovieCard = ({movie, selectMovie}) => {
     const IMAGE_PATH = "https://image.tmdb.org/t/p/w342"
 
     return (
-        <Link to={`/movie/${movie.id}`} style={{textDecoration:"none", color:"white"}}>
+        <Link 
+            to={`/movie/${movie.id}`} style={{textDecoration:"none", color:"white"}}>
             <div onClick={() => selectMovie(movie)} className={"movie"}>
                 <div className="cards">
                 <img className="cards__img" src={`https://image.tmdb.org/t/p/original${movie?movie.poster_path:""}`} />

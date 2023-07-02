@@ -2,28 +2,45 @@ import React, {useEffect, useState} from "react"
 import "./MovieDetail.css"
 import { useParams } from "react-router-dom"
 import Youtube from 'react-youtube'
+import { Link } from "react-router-dom"
 
 
 const MovieDetail = () => {
+  
+
     const [movie, setMovie] = useState()
-    const { id } = useParams()
+    const { id } = useParams() // 이걸 어떻게 사용할수있지않을까?
     const [playing, setPlaying] = useState(false)
-    const [trailer, setTrailer] = useState(null)
+    const [trailer, setTrailer] = useState('')
+
+
 
     useEffect(() => {
         getData()
+        console.log(movie)
         window.scrollTo(0,0)
     }, [])
 
+    useEffect(()=>{
+        if (movie) {
+            const trailer = movie.videos.results.find(vid => vid.name.includes("Official Trailer") || vid.name.includes("Teaser")).key
+            setTrailer(trailer ? trailer : movie.videos.results[0])
+        }
+    },[movie])
+
     const getData = () => {
-        fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2d30858c3b61b7bbbb750cb8e4f86e30&language=en-US`)
+        fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2d30858c3b61b7bbbb750cb8e4f86e30&append_to_response=videos`)
         .then(res => res.json())
-        .then(data => setMovie(data))
-    }
+        .then(data => {
+            console.log(data)
+            setMovie(data)})
+        
+    } 
 
     
-    return (
+    return trailer==='' ? null : (
         <div className="movie">
+            <Link to="/"><span className={"brand"}>Moovie The Doobie</span></Link>
             <div className="movie__intro">
                 <img className="movie__backdrop" src={`https://image.tmdb.org/t/p/original${movie ? movie.backdrop_path : ""}`} />
             </div>
@@ -44,6 +61,11 @@ const MovieDetail = () => {
                         </div>  
                         <div className="movie__runtime">{movie ? movie.runtime + " mins" : ""}</div>
                         <div className="movie__releaseDate">{movie ? "Release date: " + movie.release_date : ""}</div>
+                        <div>
+                            <Youtube
+                                videoId={trailer}
+                                    />
+                        </div>
                         <div className="movie__genres">
                             {
                                 movie && movie.genres
@@ -60,7 +82,7 @@ const MovieDetail = () => {
                         <div className="synopsisText">Synopsis</div>
                         <div>{movie ? movie.overview : ""}</div>
                     </div>
-                    
+
                 </div>
             </div>
             <div className="movie__links">
