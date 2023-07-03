@@ -5,7 +5,6 @@ import MovieCard from "../components/MovieCard/MovieCard"
 import Swiper from '../components/Carousel/Swiper'
 import { Link } from "react-router-dom"
 
-
 function Home() {
     const MOVIE_API = "https://api.themoviedb.org/3/"
     const SEARCH_API = MOVIE_API + "search/movie"
@@ -34,36 +33,12 @@ function Home() {
                 query: searchKey
             }
         })
-
         //console.log(data.results)
         setMovies(data.results)
         setMovie(data.results[0])
-
-        if (data.results.length) {
-            await fetchMovie(data.results[0].id)
-        }
     }
-
-    const fetchMovie = async (id) => {
-        const {data} = await axios.get(`${MOVIE_API}movie/${id}`, {
-            params: {
-                api_key: API_KEY,
-                append_to_response: "videos"
-            }
-        })
-
-        if (data.videos && data.videos.results) {
-            const trailer = data.videos.results.find(vid => vid.name === "Official Trailer")
-            setTrailer(trailer ? trailer : data.videos.results[0])
-        }
-        console.log(data)
-        setMovie(data)
-    }
-
 
     const selectMovie = (movie) => {
-
-        fetchMovie(movie.id)
         setPlaying(false)
         setMovie(movie)
         window.scrollTo(0, 0)
@@ -90,15 +65,13 @@ function Home() {
                     <button className="submit-search" type="submit"><i className="fa fa-search"></i></button>
                 </form>
             </header>
-            {movies.length ?
+            
                 <main>
-                    <Swiper/>
-                            
+                    <Swiper/> 
                     <div className={"center-max-size container"}>
                         {renderMovies()}
                     </div>
                 </main>
-                : 'Sorry, no movies found'}
         </div>
     );
 }
