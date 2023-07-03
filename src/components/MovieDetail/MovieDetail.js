@@ -38,7 +38,7 @@ const MovieDetail = () => {
     } 
 
     
-    return trailer==='' ? null : (
+    return trailer==='' ? <div>sorry no movie information</div> : (
         <div className="movie">
             <Link to="/"><span className={"brand"}>Moovie The Doobie</span></Link>
             <div className="movie__intro">
