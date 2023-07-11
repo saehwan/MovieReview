@@ -4,8 +4,11 @@ import axios from 'axios'
 import MovieCard from "../components/MovieCard/MovieCard"
 import Swiper from '../components/Carousel/Swiper'
 import { Link } from "react-router-dom"
+import UseAuth from "../components/UseAuth"
+import Header from "../components/Header"
 
 function Home() {
+    const currentUser = UseAuth()
     const MOVIE_API = "https://api.themoviedb.org/3/"
     const SEARCH_API = MOVIE_API + "search/movie"
     const DISCOVER_API = MOVIE_API + "discover/movie"
@@ -56,16 +59,21 @@ function Home() {
 
     return (
         <div className="Home">
-            <header className="center-max-size header">
+            {/* <header className="center-max-size header">
                 <Link to="/"><span className={"brand"}>Moovie The Doobie</span></Link>
-                <Link to="movie/Login" ><span className={"brand"}>Login</span></Link>
+                {currentUser ? <Link to="movie/Profile" ><span className={"Profile"}>Profile</span></Link>
+                :<Link to="movie/Login" ><span className={"brand"}>Login</span></Link>}
                 <form className="form" onSubmit={fetchMovies}>
                     <input className="search" type="text" id="search"
                            onInput={(event) => setSearchKey(event.target.value)}/>
                     <button className="submit-search" type="submit"><i className="fa fa-search"></i></button>
                 </form>
-            </header>
-            
+            </header> */}
+            <Header 
+                currentUser={currentUser}
+                fetchMovies={fetchMovies}
+                setSearchKey={setSearchKey}
+            />
                 <main>
                     <Swiper/> 
                     <div className={"center-max-size container"}>

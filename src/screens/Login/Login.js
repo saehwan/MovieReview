@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { signInWithPopup, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, db, provider } from "../../firebase-config";
+import { onAuthStateChanged ,signInWithRedirect ,signInWithPopup, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword, getRedirectResult } from 'firebase/auth';
+import { auth, db, provider, createUserDocumentFromAuth } from "../../firebase-config";
 import { doc, setDoc } from 'firebase/firestore';
 import { Link } from "react-router-dom"
-
+import {useEffect} from 'react'
+import  UseAuth  from '../../components/UseAuth'
 
 const Login = () => {
 
+     const currentUser = UseAuth()
      // * Signup with email and password States
      const [emailSignUp, setEmailSignUp] = useState('')
      const [passwordSignUp, setPasswordSignUp] = useState('')
@@ -15,6 +17,26 @@ const Login = () => {
      const [emailSignIn, setEmailSignIn] = useState('')
      const [passwordSignIn, setPasswordSignIn] = useState('')
 
+     useEffect(async () =>{
+      const loglog = await getRedirectResult(auth)
+      console.log(loglog)
+     })
+     
+    //  const [authUser, setAuthUser] = useState(null);
+
+    //  useEffect(() => {
+    //   const listen = onAuthStateChanged(auth, (user) => {
+    //     if (user) {
+    //       setAuthUser(user);
+    //     } else {
+    //       setAuthUser(null);
+    //     }
+    //   });
+  
+    //   return () => {
+    //     listen();
+    //   };
+    // }, []);
      // * Signup function with email and password
      const Signup = async () => {
           try {
@@ -53,7 +75,7 @@ const Login = () => {
      // * SignIn with Google
      const signInWithGoogle = async () => {
           try {
-               const userCredential = await signInWithPopup(auth, provider)
+               const userCredential = await signInWithRedirect(auth, provider)
                const user = userCredential.user
                const name = user.displayName;
                const email = user.email;
@@ -88,7 +110,7 @@ const Login = () => {
          
           <button onClick={Signup}>Sign Up</button>
           <button my='2' onClick={signInWithGoogle}>Sign In Google</button>
-          </div>      
+          </div>
           <div>
           <h3>Sign In</h3>
             <input type='email' placeholder='Email' value={emailSignIn} my='2' onChange={e => setEmailSignIn(e.target.value)} />
@@ -96,6 +118,16 @@ const Login = () => {
             <button onClick={SignIn}>Sign In</button>
             <button my='2' onClick={signInWithGoogle}>Sign In Google</button>
             <button m='2' onClick={logout}>Logout</button>
+          </div>
+          <div>
+            {currentUser  ? (
+              <>
+                <p>{`Signed In as ${currentUser .email}`}</p>
+                <button onClick={logout}>Sign Out</button>
+              </>
+            ) : (
+              <p>Signed Out</p>
+            )}
           </div>
           </div>
      )
