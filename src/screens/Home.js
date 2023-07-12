@@ -69,13 +69,14 @@ function Home() {
                     <button className="submit-search" type="submit"><i className="fa fa-search"></i></button>
                 </form>
             </header> */}
-            <Header 
-                currentUser={currentUser}
-                fetchMovies={fetchMovies}
-                setSearchKey={setSearchKey}
-            />
+            
                 <main>
                     <Swiper/> 
+                    <form className="form" onSubmit={fetchMovies}>
+                        <input className="search" type="text" id="search"
+                            onInput={(event) => setSearchKey(event.target.value)}/>
+                        <button className="submit-search" type="submit"><i className="fa fa-search"></i></button>
+                    </form>
                     <div className={"center-max-size container"}>
                         {renderMovies()}
                     </div>
