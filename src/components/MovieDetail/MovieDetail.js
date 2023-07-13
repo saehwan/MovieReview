@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useState, useId} from "react"
 import "./MovieDetail.css"
 import { useParams } from "react-router-dom"
 import Youtube from 'react-youtube'
 import { Link } from "react-router-dom"
+import {db} from "../../firebase-config"
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc} from "firebase/firestore";
 
 
 const MovieDetail = () => {
@@ -12,9 +14,23 @@ const MovieDetail = () => {
     const { id } = useParams() // 이걸 어떻게 사용할수있지않을까?
     const [playing, setPlaying] = useState(false)
     const [trailer, setTrailer] = useState('')
-    const [favourites, setFavourites] = useState([]);
 
+    const [favorites, setFavorites] = useState([]);
+    //const [changed, setChanged] = useState(false);
+    const [click, setClick] = useState(true)
 
+    const usersCollectionRef = collection(db, "favorites");
+
+    useEffect(()=> {
+
+        const getUsers = async () => {
+            // getDocs로 컬렉션안에 데이터 가져오기
+             const data = await getDocs(usersCollectionRef);
+             // users에 data안의 자료 추가. 객체에 id 덮어씌우는거
+             setFavorites(data.docs.map((doc)=>({ ...doc.data(), id: doc.id})))
+        }
+        getUsers();
+    },[])
 
     useEffect(() => {
         getData()
@@ -29,7 +45,9 @@ const MovieDetail = () => {
         }
     },[movie])
 
-
+    const clickFavorites = () =>{
+        setClick(!click)
+    }
     const getData = () => {
         fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2d30858c3b61b7bbbb750cb8e4f86e30&append_to_response=videos`)
         .then(res => res.json())
@@ -37,12 +55,28 @@ const MovieDetail = () => {
             console.log(data)
             setMovie(data)})
         
-    } 
+    }
 
-    const addFavouriteMovie = (movie) => {
-		const newFavouriteList = [...favourites, movie];
-		setFavourites(newFavouriteList);
-	};
+    const addFavorite = async () =>{
+    // addDoc을 이용해서 내가 원하는 collection에 내가 원하는 key로 값을 추가한다.
+    await setDoc(doc(db, "favorites", id), {title: movie.title,
+                                        id:  movie.id,
+                                        poster: movie.poster_path,
+                                        release_date: movie.release_date,
+                                        vote: movie.vote_average,
+                                        overview: movie.overview});
+    // 화면 업데이트를 위한 state 변경
+    //setChanged(true)
+    }
+
+    const deleteFavorite = async(id) =>{
+        // 내가 삭제하고자 하는 db의 컬렉션의 id를 뒤지면서 데이터를 찾는다
+        const favoritesDoc = doc(db, "favorites", id);
+        // deleteDoc을 이용해서 삭제
+        await deleteDoc(favoritesDoc);
+        // 화면 업데이트를 위한 state 변경
+        //setChanged(true)
+    }
     
     return trailer==='' ? <div>sorry no movie information</div> : (
         <div className="movie">
@@ -88,11 +122,14 @@ const MovieDetail = () => {
                         <div>{movie ? movie.overview : ""}</div>
                     </div>
                     <div>
-                        <button 
-                                className="favorite" 
-                                onClick={addFavouriteMovie}>
-                            favorite
+                        
+                        <button className="favorite" onClick={addFavorite} >
+                                favorite
                         </button>
+                        <button className="Undo favorite" onClick={()=>deleteFavorite(id)}>
+                                Undo favorite
+                        </button>
+                        
                     </div>
                 </div>
             </div>
