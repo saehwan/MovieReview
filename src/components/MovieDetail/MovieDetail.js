@@ -12,6 +12,7 @@ const MovieDetail = () => {
     const { id } = useParams() // 이걸 어떻게 사용할수있지않을까?
     const [playing, setPlaying] = useState(false)
     const [trailer, setTrailer] = useState('')
+    const [favourites, setFavourites] = useState([]);
 
 
 
@@ -28,6 +29,7 @@ const MovieDetail = () => {
         }
     },[movie])
 
+
     const getData = () => {
         fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2d30858c3b61b7bbbb750cb8e4f86e30&append_to_response=videos`)
         .then(res => res.json())
@@ -37,6 +39,10 @@ const MovieDetail = () => {
         
     } 
 
+    const addFavouriteMovie = (movie) => {
+		const newFavouriteList = [...favourites, movie];
+		setFavourites(newFavouriteList);
+	};
     
     return trailer==='' ? <div>sorry no movie information</div> : (
         <div className="movie">
@@ -81,7 +87,13 @@ const MovieDetail = () => {
                         <div className="synopsisText">Synopsis</div>
                         <div>{movie ? movie.overview : ""}</div>
                     </div>
-
+                    <div>
+                        <button 
+                                className="favorite" 
+                                onClick={addFavouriteMovie}>
+                            favorite
+                        </button>
+                    </div>
                 </div>
             </div>
             <div className="movie__links">
