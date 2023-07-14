@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import Youtube from 'react-youtube'
 import { Link } from "react-router-dom"
 import {db} from "../../firebase-config"
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc} from "firebase/firestore";
+import { collection, getDoc, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc} from "firebase/firestore";
 
 
 const MovieDetail = () => {
@@ -17,11 +17,11 @@ const MovieDetail = () => {
 
     const [favorites, setFavorites] = useState([]);
     //const [changed, setChanged] = useState(false);
-    const [click, setClick] = useState(true)
+    const [inFavorite, setInFavorite] = useState(false)
 
     const usersCollectionRef = collection(db, "favorites");
-
-    useEffect(()=> {
+    const favoritesDoc = doc(db, "favorites", id);
+    useEffect(async ()=> {
 
         const getUsers = async () => {
             // getDocs로 컬렉션안에 데이터 가져오기
@@ -30,6 +30,9 @@ const MovieDetail = () => {
              setFavorites(data.docs.map((doc)=>({ ...doc.data(), id: doc.id})))
         }
         getUsers();
+        const docSnap = await getDoc(doc(db, "favorites", id))
+        console.log(docSnap.data())
+        setInFavorite(!!docSnap.exists())
     },[])
 
     useEffect(() => {
@@ -38,6 +41,11 @@ const MovieDetail = () => {
         window.scrollTo(0,0)
     }, [])
 
+    // useEffect(()=>{
+    //     const favoritesDoc = doc(db, "favorites", id);
+
+    // })
+
     useEffect(()=>{
         if (movie) {
             const trailer = movie.videos.results.find(vid => vid.name.includes("Official Trailer") || vid.name.includes("Teaser")).key
@@ -45,9 +53,7 @@ const MovieDetail = () => {
         }
     },[movie])
 
-    const clickFavorites = () =>{
-        setClick(!click)
-    }
+   
     const getData = () => {
         fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2d30858c3b61b7bbbb750cb8e4f86e30&append_to_response=videos`)
         .then(res => res.json())
@@ -59,14 +65,15 @@ const MovieDetail = () => {
 
     const addFavorite = async () =>{
     // addDoc을 이용해서 내가 원하는 collection에 내가 원하는 key로 값을 추가한다.
-    await setDoc(doc(db, "favorites", id), {title: movie.title,
+    await setDoc(doc(db, "favorites", id), {original_title: movie.original_title,
                                         id:  movie.id,
-                                        poster: movie.poster_path,
+                                        poster_path: movie.poster_path,
                                         release_date: movie.release_date,
-                                        vote: movie.vote_average,
+                                        vote_average: movie.vote_average,
                                         overview: movie.overview});
     // 화면 업데이트를 위한 state 변경
     //setChanged(true)
+        setInFavorite(true)
     }
 
     const deleteFavorite = async(id) =>{
@@ -76,6 +83,8 @@ const MovieDetail = () => {
         await deleteDoc(favoritesDoc);
         // 화면 업데이트를 위한 state 변경
         //setChanged(true)
+        setInFavorite(false)
+
     }
     
     return trailer==='' ? <div>sorry no movie information</div> : (
@@ -122,14 +131,15 @@ const MovieDetail = () => {
                         <div>{movie ? movie.overview : ""}</div>
                     </div>
                     <div>
-                        
-                        <button className="favorite" onClick={addFavorite} >
-                                favorite
-                        </button>
-                        <button className="Undo favorite" onClick={()=>deleteFavorite(id)}>
+                        {inFavorite ?
+                        <button className="Undo favorite" onClick={()=>deleteFavorite(id)} >
                                 Undo favorite
                         </button>
-                        
+                            :
+                        <button className="favorite" onClick={addFavorite}>
+                                favorite
+                        </button>
+                    }
                     </div>
                 </div>
             </div>
