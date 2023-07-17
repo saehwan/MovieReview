@@ -1,10 +1,10 @@
 import React from 'react'
 import UseAuth from '../components/UseAuth'
-import { signOut} from 'firebase/auth';
-import { auth} from "../firebase-config";
+import { signOut } from 'firebase/auth';
+import { auth } from "../firebase-config";
 import { useNavigate } from "react-router-dom"
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc} from "firebase/firestore";
-import {db} from '../firebase-config'
+import { db } from '../firebase-config'
 import { useState, useEffect, useId } from 'react';
 import { Link } from "react-router-dom"
 import './Profile.css'
@@ -13,20 +13,26 @@ function Profile() {
     const currentUser = UseAuth()
     const [changed, setChanged] = useState(false);
     const [users, setUsers] = useState([]);
-    const usersCollectionRef = collection(db, "favorites");
     
     // 비동기로 데이터 받을준비
     const getUsers = async () => {
         // getDocs로 컬렉션안에 데이터 가져오기
-        const data = await getDocs(usersCollectionRef);
-        // users에 data안의 자료 추가. 객체에 id 덮어씌우는거
-        setUsers(data.docs.map((doc)=>({ ...doc.data(), id: doc.id})))
-}
-    useEffect(()=>{
+        if (currentUser) {
+            // const usersCollectionRef = collection(db, `users/${currentUser.uid}/likes`);
+            console.log(currentUser)
+            const data = await getDocs(collection(db, `users/${currentUser.uid}/likes`));
+            data.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data())
+            })
+            // users에 data안의 자료 추가. 객체에 id 덮어씌우는거
+            setUsers(data.docs.map((doc)=>({ ...doc.data(), id: doc.id})))
+        }
+    }
+
+    useEffect(() => {
         getUsers();
-        console.log(changed)
         setChanged(false)
-    },[changed])
+    }, [currentUser, changed])
 
     const logout = async () => {
         try {
@@ -37,15 +43,17 @@ function Profile() {
             console.log('error: ', error);
         }
     }
+
     const deleteFavorite = async(id) =>{
         // 내가 삭제하고자 하는 db의 컬렉션의 id를 뒤지면서 데이터를 찾는다
-        const favoritesDoc = doc(db, "favorites", id);
+        const favoritesDoc = doc(db, `users/${currentUser.uid}/likes`, id);
         // deleteDoc을 이용해서 삭제
         await deleteDoc(favoritesDoc);
         // 화면 업데이트를 위한 state 변경
         await setChanged(true)
         console.log(true)
     }
+
     const showFavorites = users.map((movie) => (
         <div>
             <Link 
@@ -68,8 +76,7 @@ function Profile() {
         </div>
                                                 ))
     
-
-    return  (
+    return (
         <div>
             <div>
                 {currentUser &&
@@ -83,7 +90,7 @@ function Profile() {
                 {showFavorites}
             </div>
         </div>
-        )
+    )
 }
 
 

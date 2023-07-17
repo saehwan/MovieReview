@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 const Header = ({currentUser}) => {
 
     console.log(currentUser)
+ 
     return (
         <header className="center-max-size header">
             <Link to="/"><span className={"brand"}>Moovie The Doobie</span></Link>
@@ -17,3 +18,5 @@ const Header = ({currentUser}) => {
 }
 
 export default Header;
+
+//my movie fit

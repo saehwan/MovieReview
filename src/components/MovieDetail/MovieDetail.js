@@ -5,10 +5,12 @@ import Youtube from 'react-youtube'
 import { Link } from "react-router-dom"
 import {db} from "../../firebase-config"
 import { collection, getDoc, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc} from "firebase/firestore";
+import UseAuth from "../UseAuth"
 
 
 const MovieDetail = () => {
   
+    const currentUser = UseAuth()
 
     const [movie, setMovie] = useState()
     const { id } = useParams() // 이걸 어떻게 사용할수있지않을까?
@@ -19,32 +21,30 @@ const MovieDetail = () => {
     //const [changed, setChanged] = useState(false);
     const [inFavorite, setInFavorite] = useState(false)
 
-    const usersCollectionRef = collection(db, "favorites");
-    const favoritesDoc = doc(db, "favorites", id);
+    const usersCollectionRef = collection(db, "users");
+    //const favoritesDoc = doc(db, "favorites", id);
     useEffect(async ()=> {
-
-        const getUsers = async () => {
-            // getDocs로 컬렉션안에 데이터 가져오기
-             const data = await getDocs(usersCollectionRef);
-             // users에 data안의 자료 추가. 객체에 id 덮어씌우는거
-             setFavorites(data.docs.map((doc)=>({ ...doc.data(), id: doc.id})))
-        }
-        getUsers();
-        const docSnap = await getDoc(doc(db, "favorites", id))
-        console.log(docSnap.data())
-        setInFavorite(!!docSnap.exists())
-    },[])
+        if(currentUser){
+            const getUsers = async () => {
+                // getDocs로 컬렉션안에 데이터 가져오기
+                 const data = await getDocs(usersCollectionRef);
+                 // users에 data안의 자료 추가. 객체에 id 덮어씌우는거
+                 setFavorites(data.docs.map((doc)=>({ ...doc.data(), id: doc.id})))
+            }
+            getUsers();
+            const docSnap = await getDoc(doc(db, `users/${currentUser.uid}/likes`, id))
+            console.log(docSnap.data())
+            setInFavorite(!!docSnap.exists())
+        }}
+    )
+        
 
     useEffect(() => {
         getData()
         console.log(movie)
         window.scrollTo(0,0)
-    }, [])
+    }, [currentUser])
 
-    // useEffect(()=>{
-    //     const favoritesDoc = doc(db, "favorites", id);
-
-    // })
 
     useEffect(()=>{
         if (movie) {
@@ -65,7 +65,7 @@ const MovieDetail = () => {
 
     const addFavorite = async () =>{
     // addDoc을 이용해서 내가 원하는 collection에 내가 원하는 key로 값을 추가한다.
-    await setDoc(doc(db, "favorites", id), {original_title: movie.original_title,
+    await setDoc(doc(db, `users/${currentUser.uid}/likes`, id), {original_title: movie.original_title,
                                         id:  movie.id,
                                         poster_path: movie.poster_path,
                                         release_date: movie.release_date,
@@ -78,7 +78,7 @@ const MovieDetail = () => {
 
     const deleteFavorite = async(id) =>{
         // 내가 삭제하고자 하는 db의 컬렉션의 id를 뒤지면서 데이터를 찾는다
-        const favoritesDoc = doc(db, "favorites", id);
+        const favoritesDoc = doc(db, `users/${currentUser.uid}/likes`, id);
         // deleteDoc을 이용해서 삭제
         await deleteDoc(favoritesDoc);
         // 화면 업데이트를 위한 state 변경
