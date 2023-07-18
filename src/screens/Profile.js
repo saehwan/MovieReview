@@ -19,11 +19,11 @@ function Profile() {
         // getDocs로 컬렉션안에 데이터 가져오기
         if (currentUser) {
             // const usersCollectionRef = collection(db, `users/${currentUser.uid}/likes`);
-            console.log(currentUser)
+            // console.log(currentUser)
             const data = await getDocs(collection(db, `users/${currentUser.uid}/likes`));
-            data.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data())
-            })
+            // data.forEach((doc) => {
+            //     console.log(doc.id, " => ", doc.data())
+            // })
             // users에 data안의 자료 추가. 객체에 id 덮어씌우는거
             setUsers(data.docs.map((doc)=>({ ...doc.data(), id: doc.id})))
         }

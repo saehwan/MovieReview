@@ -37,7 +37,6 @@ const MovieDetail = () => {
             setInFavorite(!!docSnap.exists())
         }}
     )
-        
 
     useEffect(() => {
         getData()
@@ -64,15 +63,17 @@ const MovieDetail = () => {
     }
 
     const addFavorite = async () =>{
-    // addDoc을 이용해서 내가 원하는 collection에 내가 원하는 key로 값을 추가한다.
-    await setDoc(doc(db, `users/${currentUser.uid}/likes`, id), {original_title: movie.original_title,
-                                        id:  movie.id,
-                                        poster_path: movie.poster_path,
-                                        release_date: movie.release_date,
-                                        vote_average: movie.vote_average,
-                                        overview: movie.overview});
-    // 화면 업데이트를 위한 state 변경
-    //setChanged(true)
+        // addDoc을 이용해서 내가 원하는 collection에 내가 원하는 key로 값을 추가한다.
+        await setDoc(doc(db, `users/${currentUser.uid}/likes`, id), {
+            original_title: movie.original_title,
+            id:  movie.id,
+            poster_path: movie.poster_path,
+            release_date: movie.release_date,
+            vote_average: movie.vote_average,
+            overview: movie.overview
+        });
+        // 화면 업데이트를 위한 state 변경
+        //setChanged(true)
         setInFavorite(true)
     }
 
