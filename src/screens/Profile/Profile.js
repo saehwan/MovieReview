@@ -1,11 +1,11 @@
 import React from 'react'
-import UseAuth from '../components/UseAuth'
+import UseAuth from '../../components/UseAuth'
 import { signOut } from 'firebase/auth';
-import { auth } from "../firebase-config";
+import { auth } from "../../firebase-config";
 import { useNavigate } from "react-router-dom"
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc} from "firebase/firestore";
-import { db } from '../firebase-config'
-import { useState, useEffect, useId } from 'react';
+import { collection, getDocs, doc, deleteDoc} from "firebase/firestore";
+import { db } from '../../firebase-config'
+import { useState, useEffect} from 'react';
 import { Link } from "react-router-dom"
 import './Profile.css'
 function Profile() {
@@ -20,7 +20,7 @@ function Profile() {
         if (currentUser) {
             // const usersCollectionRef = collection(db, `users/${currentUser.uid}/likes`);
             // console.log(currentUser)
-            const data = await getDocs(collection(db, `users/${currentUser.uid}/likes`));
+            const data = await getDocs(collection(db, `users/${currentUser.uid}/favoriteMovies`));
             // data.forEach((doc) => {
             //     console.log(doc.id, " => ", doc.data())
             // })
@@ -46,7 +46,7 @@ function Profile() {
 
     const deleteFavorite = async(id) =>{
         // 내가 삭제하고자 하는 db의 컬렉션의 id를 뒤지면서 데이터를 찾는다
-        const favoritesDoc = doc(db, `users/${currentUser.uid}/likes`, id);
+        const favoritesDoc = doc(db, `users/${currentUser.uid}/favoriteMovies`, id);
         // deleteDoc을 이용해서 삭제
         await deleteDoc(favoritesDoc);
         // 화면 업데이트를 위한 state 변경

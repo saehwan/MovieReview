@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from "react-router-dom"
 import './MovieCard.css'
 const MovieCard = ({movie, selectMovie}) => {
-    const IMAGE_PATH = "https://image.tmdb.org/t/p/w342"
-
     return (
         <Link 
             to={`/movie/${movie.id}`} style={{textDecoration:"none", color:"white"}}>

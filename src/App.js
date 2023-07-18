@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from './screens/Home'
-import MovieDetail from './components/MovieDetail/MovieDetail'
+import Home from './screens/Home/Home'
+import MovieDetail from './screens/MovieDetail/MovieDetail'
 import Login from './screens/Login/Login'
 import UseAuth from "./components/UseAuth";
-import Profile from "./screens/Profile";
-import Header from "./components/Header";
+import Profile from "./screens/Profile/Profile";
+import Header from "./components/Header/Header";
 function App() {
+    //pass the user info
     const currentUser = UseAuth()
     return (
         

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { onAuthStateChanged ,signInWithRedirect ,signInWithPopup, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword, getRedirectResult } from 'firebase/auth';
-import { auth, db, provider, createUserDocumentFromAuth } from "../../firebase-config";
+import { signInWithRedirect, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword, getRedirectResult } from 'firebase/auth';
+import { auth, db, provider } from "../../firebase-config";
 import { doc, setDoc } from 'firebase/firestore';
-import { useNavigate, Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import {useEffect} from 'react'
 import  UseAuth  from '../../components/UseAuth'
 
@@ -25,21 +25,6 @@ const Login = () => {
           }
      })
      
-    //  const [authUser, setAuthUser] = useState(null);
-
-    //  useEffect(() => {
-    //   const listen = onAuthStateChanged(auth, (user) => {
-    //     if (user) {
-    //       setAuthUser(user);
-    //     } else {
-    //       setAuthUser(null);
-    //     }
-    //   });
-  
-    //   return () => {
-    //     listen();
-    //   };
-    // }, []);
      // * Signup function with email and password
      const Signup = async () => {
           try {
