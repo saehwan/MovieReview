@@ -22,7 +22,7 @@
     width: 75%;
     display: flex;
     position: relative;
-    bottom: 225px;
+    bottom: 190px;
 }
 
 .movie__detailLeft {
@@ -88,14 +88,16 @@
 
 .movie__links {
     position: relative;
-    bottom: 120px;
-    display: flex;
+    bottom: 300px;
+    left: 900px;
+    display: grid;
     justify-content: space-between;
     width: 75%;
 }
 
 .movie__heading {
     font-size: 2.2rem;
+    bottom: -100px;
 }
 
 .movie__Button {
@@ -129,6 +131,7 @@
     justify-content: center;
     align-items: flex-end;
     margin-bottom: 4rem;
+    bottom: -100px;
 }
 
 

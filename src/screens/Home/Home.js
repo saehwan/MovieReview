@@ -13,7 +13,7 @@ function Home() {
     const [movies, setMovies] = useState([])
     const [searchKey, setSearchKey] = useState("")
     const [movie, setMovie] = useState({title: "Loading Movies"})
-    
+    const [value, setValue] = useState("")
     // fetch the movies when page first roaded
     useEffect(() => {
         fetchMovies()
@@ -32,6 +32,7 @@ function Home() {
         })
         setMovies(data.results)
         setMovie(data.results[0])
+        setSearchKey("")
     }
 
     const selectMovie = (movie) => {
@@ -54,9 +55,10 @@ function Home() {
                 <main>
                     <Swiper/> 
                     <form className="form" onSubmit={fetchMovies}>
-                        <input className="search" type="text" id="search"
+                        <input className="search" type="text" id="search" 
                             onInput={(event) => setSearchKey(event.target.value)}/>
                         <button className="submit-search" type="submit"><i className="fa fa-search"></i></button>
+                        
                     </form>
                     <div className={"center-max-size container"}>
                         {renderMovies()}

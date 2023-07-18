@@ -130,11 +130,11 @@ const MovieDetail = () => {
                     <div>
                         {inFavorite ?
                         <button className="Undo favorite" onClick={()=>deleteFavorite(id)} >
-                                Undo favorite
+                                Delete movie
                         </button>
                             :
                         <button className="favorite" onClick={addFavorite}>
-                                favorite
+                                Add to favorite list
                         </button>
                     }
                     </div>
@@ -158,7 +158,7 @@ const MovieDetail = () => {
                                 company.logo_path 
                                 && 
                                 <span className="productionCompanyImage">
-                                    <img className="movie__productionComapany" src={"https://image.tmdb.org/t/p/original" + company.logo_path} />
+                                    <img className="movie__productionComapany" src={"https://image.tmdb.org/t/p/original" + company.logo_path}  />
                                     <span>{company.name}</span>
                                 </span>
                             }
