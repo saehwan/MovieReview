@@ -8,6 +8,7 @@ import { db } from '../../firebase-config'
 import { useState, useEffect} from 'react';
 import { Link } from "react-router-dom"
 import './Profile.css'
+
 function Profile() {
     const navigate = useNavigate()
     const currentUser = UseAuth()
