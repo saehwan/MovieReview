@@ -14,7 +14,7 @@ function App() {
             <BrowserRouter>
                 <Header currentUser={currentUser}/>
                     <Routes>
-                        <Route index element={<Home/>}></Route>
+                        <Route exact path="MovieReview" element={<Home/>}></Route>
                         <Route exact path="movie/:id" element={<MovieDetail />}></Route>
                         <Route exact path="movie/Profile" element={<Profile/>}></Route>
                         <Route exact path="movie/Login" element={<Login/>}></Route>
